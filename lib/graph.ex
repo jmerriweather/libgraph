@@ -752,6 +752,26 @@ defmodule Graph do
     label_vertex(g, v, [vlabel])
   end
 
+  def label_vertex_replace(
+        %__MODULE__{vertices: vs, vertex_labels: labels, vertex_identifier: vertex_identifier} =
+          g,
+        v,
+        vlabels
+      )
+      when is_list(vlabels) do
+    with v_id <- vertex_identifier.(v),
+         true <- Map.has_key?(vs, v_id),
+         labels <- Map.put(labels, v_id, vlabels) do
+      %__MODULE__{g | vertex_labels: labels}
+    else
+      _ -> {:error, {:invalid_vertex, v}}
+    end
+  end
+
+  def label_vertex_replace(g, v, vlabel) do
+    label_vertex_replace(g, v, [vlabel])
+  end
+
   @doc """
     iex> graph = Graph.new |> Graph.add_vertex(:a, [:foo, :bar])
     ...> [:foo, :bar] = Graph.vertex_labels(graph, :a)
