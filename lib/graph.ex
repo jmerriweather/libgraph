@@ -762,7 +762,7 @@ defmodule Graph do
     with v_id <- vertex_identifier.(v),
          true <- Map.has_key?(vs, v_id),
          labels <- Map.put(labels, v_id, vlabels) do
-      %__MODULE__{g | vertex_labels: labels}
+      {:ok, %__MODULE__{g | vertex_labels: labels}}
     else
       _ -> {:error, {:invalid_vertex, v}}
     end
